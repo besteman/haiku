@@ -14,16 +14,11 @@ const data = fs.readFileSync(
 
 const haiku = new Haiku(data)
 
-console.log(haiku);
-
 const keys = Object.keys(haiku)
-
-console.log(keys);
 
 for (let i = 0; i < keys.length; i = i + 1) {
     // console.log(haiku[keys[i]]);
     for (let j = 0; j < haiku[keys[i]].splitLine.length; j = j + 1) {
-        console.log(haiku[keys[i]].splitLine[j]);
         axios({
             "method": "GET",
             "url": `https://wordsapiv1.p.rapidapi.com/words/${haiku[keys[i]].splitLine[j]}/syllables`,
@@ -35,14 +30,14 @@ for (let i = 0; i < keys.length; i = i + 1) {
             }
             })
             .then((response) => {
-                console.log(response.data);
-                haiku[keys[i]].syllablesCount += response.data.syllables.count;
+                if(response.data.syllables.count != undefined){
+                    haiku[keys[i]].syllablesCount += parseInt(response.data.syllables.count);
+                }
 
             })
             .catch((error) => {
               console.log(error)
         })
     }
+    console.log(haiku);
 }
-
-console.log(haiku);
